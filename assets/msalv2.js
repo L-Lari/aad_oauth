@@ -13,46 +13,46 @@ var aadOauth = (function () {
   };
 
   // Initialise the myMSALObj for the given client, authority and scope
- function init(config) {
-     // TODO: Add support for other MSAL configuration
-     var authData = {
-         clientId: config.clientId,
-         authority: config.isB2C ? "https://" + config.tenant + ".b2clogin.com/tfp/" + config.tenant + ".onmicrosoft.com/" + config.policy + "/" : "https://login.microsoftonline.com/" + config.tenant,
-         knownAuthorities: [ config.tenant + ".b2clogin.com", "login.microsoftonline.com"],
-         redirectUri: config.redirectUri,
-     };
-     var postLogoutRedirectUri = {
-         postLogoutRedirectUri: config.postLogoutRedirectUri,
-     };
-     var msalConfig = {
-         auth: config?.postLogoutRedirectUri == null ? {
-             ...authData,
-         } : {
-             ...authData,
-             ...postLogoutRedirectUri,
-         },
-         cache: {
-             cacheLocation: config.cacheLocation,
-             storeAuthStateInCookie: false,
-         },
-     };
+  function init(config) {
+    // TODO: Add support for other MSAL configuration
+    var authData = {
+      clientId: config.clientId,
+      authority: config.authorityUrl,
+      knownAuthorities: [config.tenant + ".b2clogin.com", "login.microsoftonline.com"],
+      redirectUri: config.redirectUri,
+    };
+    var postLogoutRedirectUri = {
+      postLogoutRedirectUri: config.postLogoutRedirectUri,
+    };
+    var msalConfig = {
+      auth: config?.postLogoutRedirectUri == null ? {
+        ...authData,
+      } : {
+        ...authData,
+        ...postLogoutRedirectUri,
+      },
+      cache: {
+        cacheLocation: config.cacheLocation,
+        storeAuthStateInCookie: false,
+      },
+    };
 
-     if (typeof config.scope === "string") {
-         tokenRequest.scopes = config.scope.split(" ");
-     } else {
-         tokenRequest.scopes = config.scope;
-     }
+    if (typeof config.scope === "string") {
+      tokenRequest.scopes = config.scope.split(" ");
+    } else {
+      tokenRequest.scopes = config.scope;
+    }
 
-     tokenRequest.extraQueryParameters = JSON.parse(config.customParameters);
-     tokenRequest.prompt = config.prompt;
-     tokenRequest.loginHint = config.loginHint;
+    tokenRequest.extraQueryParameters = JSON.parse(config.customParameters);
+    tokenRequest.prompt = config.prompt;
+    tokenRequest.loginHint = config.loginHint;
 
-     myMSALObj = new msal.PublicClientApplication(msalConfig);
-     // Register Callbacks for Redirect flow and record the task so we
-     // can await its completion in the login API
+    myMSALObj = new msal.PublicClientApplication(msalConfig);
+    // Register Callbacks for Redirect flow and record the task so we
+    // can await its completion in the login API
 
-     redirectHandlerTask = myMSALObj.handleRedirectPromise();
- }
+    redirectHandlerTask = myMSALObj.handleRedirectPromise();
+  }
 
   // Tries to silently acquire a token. Will return null if a token
   // could not be acquired or if no cached account credentials exist.
@@ -92,7 +92,7 @@ var aadOauth = (function () {
         extraQueryParameters: tokenRequest.extraQueryParameters
       });
 
-      return  authResult = silentAuthResult;
+      return authResult = silentAuthResult;
     } catch (error) {
       console.log('Unable to silently acquire a new token: ' + error.message)
       return null;
@@ -122,7 +122,7 @@ var aadOauth = (function () {
     // a cached access token
     await silentlyAcquireToken()
 
-    if(authResult != null) {
+    if (authResult != null) {
       // Skip interactive login
       onSuccess(authResult.accessToken ?? null);
       return
@@ -185,7 +185,7 @@ var aadOauth = (function () {
     // a cached access token
     await silentlyAcquireToken()
 
-    if(authResult != null) {
+    if (authResult != null) {
       onSuccess(authResult.accessToken ?? null);
       return
     }
