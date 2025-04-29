@@ -17,7 +17,7 @@ var aadOauth = (function () {
     // TODO: Add support for other MSAL configuration
     var authData = {
       clientId: config.clientId,
-      authority: config.authorityUrl,
+      authority: config.authorizationUrl,
       knownAuthorities: [config.tenant + ".b2clogin.com", "login.microsoftonline.com"],
       redirectUri: config.redirectUri,
     };
