@@ -18,7 +18,7 @@ var aadOauth = (function () {
     var authData = {
       clientId: config.clientId,
       authority: config.authorizationUrl,
-      knownAuthorities: [config.tenant + ".b2clogin.com", "login.microsoftonline.com"],
+      knownAuthorities: [config.tenant + ".ciamlogin.com", config.tenant + ".b2clogin.com", "login.microsoftonline.com", config.tenant + ".onmicrosoft.com"],
       redirectUri: config.redirectUri,
     };
     var postLogoutRedirectUri = {
